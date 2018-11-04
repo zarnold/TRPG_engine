@@ -1,13 +1,6 @@
 'use strict';
 import Unit from './unit.js';
+import Stage from './stage.js';
 
-
-
-let a = new Unit("ball");
-console.log(a.name);
-console.log(a.hp);
-a.hurt(44);
-console.log(a.hp);
-a.hurt(44);
-console.log(a.hp);
-
+let stage = new Stage('screen');
+let stage_b = new Stage('screen_B');

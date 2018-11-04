@@ -1,3 +1,16 @@
 body {
     background-color: #AAE;
 }
+
+#screen {
+  width : 840px;
+  height: 600px;
+  background-color: #EAA;
+}
+
+#screen_B {
+  margin-top: 20px;
+  width : 840px;
+  height: 200px;
+  background-color: #EAA;
+}
