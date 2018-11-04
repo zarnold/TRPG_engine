@@ -1,4 +1,3 @@
-/**
- * @module main
- * Load all modules
- */
+'use strict';
+import Unit from './unit.js';
+
