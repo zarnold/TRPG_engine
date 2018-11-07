@@ -21,15 +21,14 @@ body {
 .square {
   border-top : 1px solid #333;
   border-right: 1px solid #333;  
-  border-left : 1px solid #EEE;
-  border-bottom: 1px solid #EEE;  
   opacity: 0.8;
   flex-grow: 1;
+  display: flex;
 }
 
 
 #screen {
-  width : 840px;
+  width : 600px;
   height: 600px;
   background-color: #EAA;
 }
@@ -45,9 +44,22 @@ body {
  * Unit Styling
  */
  .unit {
-   position: absolute;
-   width: 20px;
-   height: 20px;
-   border-style: '1px solid #333';
+   flex-grow: 1;  
    background-color: #FF7800;
- };
+ }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
