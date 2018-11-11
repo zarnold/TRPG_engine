@@ -10,6 +10,9 @@ export default class Stage {
     this.element= document.getElementById(nodeId);
     this.element.classList.add('stage');
 
+    // Each stage have a click listener
+    // that will be bubbled form unit click
+    this.element.addEventListener('click', this.dispatchEvent.bind(this));
     // The stage is rows and columns
     // of html element called square
     this.nCol = nCol;
@@ -25,18 +28,24 @@ export default class Stage {
     };
 
     // add rows
-    for ( var i=0; i< this.nRow; i++)
+    for ( let i=0; i< this.nRow; i++)
     {
       let newRow = document.createElement("div");
       newRow.className = "row";
 
       // Add columns to each row, setting class 
       // used for flex box
-      for( var j=0; j<this.nCol; j++)
+      for( let j=0; j<this.nCol; j++)
       {
         let newSquare = document.createElement("div");
         newSquare.classList.add("square");
         newRow.appendChild(newSquare);
+
+        // Pass the square coordinate to event bubbling
+        newSquare.addEventListener('click', function(event) {
+          event.i = i;
+          event.j = j;
+        });
         this.cells[i][j] = newSquare;
       }
       this.element.appendChild(newRow);
@@ -45,6 +54,22 @@ export default class Stage {
 
   };
 
+  /**
+   * Manage Stage current state from 
+   * event
+   */
+
+  dispatchEvent(event) {
+    console.log(`Something happened to the stage !`);
+    console.log(event.target);
+    if(event.hasOwnProperty('src')) {
+      console.log(event.src);
+      console.log(event.i);
+      console.log(event.j);
+
+      event.src.moveTo(event.src.moveTo(event.i+1, event.j));
+    }
+  }
   /*
    * Attach an unit to the stage
    */
