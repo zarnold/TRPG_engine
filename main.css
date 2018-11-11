@@ -26,6 +26,9 @@ body {
   display: flex;
 }
 
+.reachable {
+  background-color: #AEA;
+}
 
 #screen {
   width : 600px;

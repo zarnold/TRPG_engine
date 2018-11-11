@@ -14,8 +14,7 @@ const stageFSM = {
     'unitSelection' : {
       next: 'unitSelected',
       transitionFn: function(t) {
-        console.log("A new unit ha been selected");
-        console.log(t.selected);
+        t.displaySquareState();
       }
     }
   },
@@ -23,16 +22,20 @@ const stageFSM = {
     'unitSelection' : {
       next: 'unitSelected',
       transitionFn: function(t) {
-        console.log("A new unit ha been selected");
-        console.log(t.selected);
+        t.displaySquareState();
+      }
+    },
+    'unitUnselection' : {
+      next: 'blank',
+      transitionFn: function(t) {
+        t.displaySquareState();
       }
     },
     'cancel':{
       next: 'blank',
       transitionFn: function(t) {
-        console.log("nothing selected anymore");
         t.selected = undefined;
-        console.log(t.selected);
+        t.displaySquareState();
       }
     }
   }
@@ -77,6 +80,8 @@ export default class Stage {
       {
         let newSquare = document.createElement("div");
         newSquare.classList.add("square");
+        newSquare.dataset.x=i;
+        newSquare.dataset.y=j;
         newRow.appendChild(newSquare);
 
         // Pass the square coordinate to event bubbling
@@ -91,6 +96,20 @@ export default class Stage {
   };
 
 
+  /**
+   * trigger class on cells
+   * to show possbility
+   */
+  displaySquareState() {
+    this.cells
+        .flat()
+        .map( (s) => (s.classList.remove("reachable")));
+
+    this.cells
+        .flat()
+        .filter( (s) => ( Stage.manhattanDistance(s.dataset.x, s.dataset.y, this.selected.x, this.selected.y) < 6))
+        .map( (s) => (s.classList.add("reachable")));
+  };
   /**
    * Manage Stage current state from 
    * event
@@ -113,9 +132,15 @@ export default class Stage {
 
     if(event.type == 'click') {
       if(event.hasOwnProperty('src')) {
-        this.selected = event.src;
-        this.somethingHappens('unitSelection');
-        //event.src.moveTo(event.src.moveTo(event.i+1, event.j));
+
+        if(event.src == this.selected) {
+          this.selected = undefined;
+          this.somethingHappens('unitUnselection');
+        } else {
+          this.selected = event.src;
+          this.somethingHappens('unitSelection');
+          //event.src.moveTo(event.src.moveTo(event.i+1, event.j));
+        };
       }
     };
 
@@ -132,6 +157,9 @@ export default class Stage {
   addUnit(u, posX=2, posY=2) {
     this.cells[posX][posY].appendChild(u.element);
 
+    u.x = posX;
+    u.y = posY;
+
     /**
      * This is the tricky part
      * the stage override each unit
@@ -146,8 +174,16 @@ export default class Stage {
       if(x>=0 && y>=0 && y<this.nCol && x<this.nRow )
       {
         this.cells[x][y].appendChild(u.element);
+        u.x = x;
+        u.y = y;
       }
     }.bind(this);
   };
+
+
+  static manhattanDistance(x1, y1, x2, y2) 
+  {
+    return Math.abs(x1-x2) + Math.abs(y1-y2);
+  }
 
 }

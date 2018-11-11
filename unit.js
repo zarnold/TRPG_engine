@@ -10,6 +10,8 @@ export default class Unit {
   constructor(name="anonymous") {
     this.name=name;
     this.HP=100;
+    this.x = 0;
+    this.y = 0;
 
     this.element = document.createElement("div");
     this.element.classList.add("unit");

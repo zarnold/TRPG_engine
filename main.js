@@ -16,3 +16,5 @@ let achille = new Unit('Achille');
 stage.addUnit(achille, 4,3);
 let bernard= new Unit('bernard');
 stage.addUnit(bernard, 10,10);
+bernard.moveTo(1,8);
+
