@@ -1,0 +1,72 @@
+/**
+ *
+ * @module stage.js
+ */
+'use strict';
+
+export default class Stage {
+
+  constructor(nodeId,  nCol=30, nRow=20 ) {
+    this.element= document.getElementById(nodeId);
+    this.element.classList.add('stage');
+
+    // The stage is rows and columns
+    // of html element called square
+    this.nCol = nCol;
+    this.nRow = nRow;  
+
+    // Element reference are kept 
+    // in a cells 2D array
+    // for acessing them later
+    this.cells = new Array(nRow);
+    for( var idx= 0; idx < nRow; idx++)
+    {
+      this.cells[idx]   = new Array(nCol)
+    };
+
+    // add rows
+    for ( var i=0; i< this.nRow; i++)
+    {
+      let newRow = document.createElement("div");
+      newRow.className = "row";
+
+      // Add columns to each row, setting class 
+      // used for flex box
+      for( var j=0; j<this.nCol; j++)
+      {
+        let newSquare = document.createElement("div");
+        newSquare.classList.add("square");
+        newRow.appendChild(newSquare);
+        this.cells[i][j] = newSquare;
+      }
+      this.element.appendChild(newRow);
+    };
+
+
+  };
+
+  /*
+   * Attach an unit to the stage
+   */
+  addUnit(u, posX=2, posY=2) {
+    this.cells[posX][posY].appendChild(u.element);
+
+    /**
+     * This is the tricky part
+     * the stage override each unit
+     * moveTo function 
+     * by binding its own context
+     * and building the move function
+     * according to this context.
+     *  Thus, the unit only have a moveTo
+     * function to call
+     */
+    u.moveTo = function(x,y) {
+      if(x>=0 && y>=0 && y<this.nCol && x<this.nRow )
+      {
+        this.cells[x][y].appendChild(u.element);
+      }
+    }.bind(this);
+  };
+
+}
