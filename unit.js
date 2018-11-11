@@ -38,9 +38,6 @@ export default class Unit {
   };
 
   clicked(event) {
-    console.log(`${this.name} was clicked`);
-    console.log(event.target);
-    console.log(this);
 
     // pass some parameter to bubbled parent
     event.src = this;

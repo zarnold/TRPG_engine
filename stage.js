@@ -4,7 +4,43 @@
  */
 'use strict';
 
+/**
+ * stageFSM :  a Finite State Machine for managing occuring action
+ *             Give the next state for each state and the transition function
+ *             given a event
+ */
+const stageFSM = {
+  'blank' : {
+    'unitSelection' : {
+      next: 'unitSelected',
+      transitionFn: function(t) {
+        console.log("A new unit ha been selected");
+        console.log(t.selected);
+      }
+    }
+  },
+  'unitSelected' : {
+    'unitSelection' : {
+      next: 'unitSelected',
+      transitionFn: function(t) {
+        console.log("A new unit ha been selected");
+        console.log(t.selected);
+      }
+    },
+    'cancel':{
+      next: 'blank',
+      transitionFn: function(t) {
+        console.log("nothing selected anymore");
+        t.selected = undefined;
+        console.log(t.selected);
+      }
+    }
+  }
+};
+
+
 export default class Stage {
+
 
   constructor(nodeId,  nCol=30, nRow=20 ) {
     this.element= document.getElementById(nodeId);
@@ -17,6 +53,8 @@ export default class Stage {
     // of html element called square
     this.nCol = nCol;
     this.nRow = nRow;  
+    this.state = 'blank';
+    this.selected = undefined;
 
     // Element reference are kept 
     // in a cells 2D array
@@ -50,24 +88,42 @@ export default class Stage {
       }
       this.element.appendChild(newRow);
     };
-
-
   };
+
 
   /**
    * Manage Stage current state from 
    * event
    */
 
-  dispatchEvent(event) {
-    console.log(`Something happened to the stage !`);
-    console.log(event.target);
-    if(event.hasOwnProperty('src')) {
-      console.log(event.src);
-      console.log(event.i);
-      console.log(event.j);
+  somethingHappens(e) {
+    let next;
 
-      event.src.moveTo(event.src.moveTo(event.i+1, event.j));
+    if(stageFSM.hasOwnProperty(this.state) ) {
+      if(stageFSM[this.state].hasOwnProperty(e)) {
+        if(stageFSM[this.state][e]['transitionFn']) 
+          stageFSM[this.state][e]['transitionFn'](this);
+        if(stageFSM[this.state][e]['next']) 
+          this.state = stageFSM[this.state][e]['next'];
+      };
+    };
+  };
+
+  dispatchEvent(event) {
+
+    if(event.type == 'click') {
+      if(event.hasOwnProperty('src')) {
+        this.selected = event.src;
+        this.somethingHappens('unitSelection');
+        //event.src.moveTo(event.src.moveTo(event.i+1, event.j));
+      }
+    };
+
+    if(event.type == 'keydown') {
+
+      if(event.key=='Escape') {
+        this.somethingHappens('cancel');
+      };
     }
   }
   /*
