@@ -28,6 +28,7 @@ const stageFSM = {
     'unitUnselection' : {
       next: 'blank',
       transitionFn: function(t) {
+        t.selected = undefined;
         t.displaySquareState();
       }
     },
@@ -107,8 +108,18 @@ export default class Stage {
 
     this.cells
         .flat()
-        .filter( (s) => ( Stage.manhattanDistance(s.dataset.x, s.dataset.y, this.selected.x, this.selected.y) < 6))
+        .map( (s) => (s.classList.remove("attackable")));
+
+    this.cells
+        .flat()
+        .filter( (s) => ( Stage.manhattanDistance(s.dataset.x, s.dataset.y, this.selected.x, this.selected.y) < this.selected.charac.move))
         .map( (s) => (s.classList.add("reachable")));
+
+    this.cells
+        .flat()
+        .filter( (s) => ( Stage.manhattanDistance(s.dataset.x, s.dataset.y, this.selected.x, this.selected.y) < this.selected.charac.atk.max &&  Stage.manhattanDistance(s.dataset.x, s.dataset.y, this.selected.x, this.selected.y) >= this.selected.charac.atk.min ) )
+        .map( (s) => (s.classList.add("attackable")));
+
   };
   /**
    * Manage Stage current state from 
@@ -131,6 +142,8 @@ export default class Stage {
   dispatchEvent(event) {
 
     if(event.type == 'click') {
+
+      // A unit was clicked
       if(event.hasOwnProperty('src')) {
 
         if(event.src == this.selected) {
@@ -142,7 +155,15 @@ export default class Stage {
           //event.src.moveTo(event.src.moveTo(event.i+1, event.j));
         };
       }
+
+      console.log(event.target.classList);
+      if(event.target.classList.contains("reachable"))
+      {
+          this.selected.moveTo(event.target.dataset.x, event.target.dataset.y)
+          this.somethingHappens('unitUnselection');
+      }
     };
+
 
     if(event.type == 'keydown') {
 

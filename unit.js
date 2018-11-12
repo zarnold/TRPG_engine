@@ -13,6 +13,14 @@ export default class Unit {
     this.x = 0;
     this.y = 0;
 
+    this.charac = {
+      move: 3,
+      atk: {
+        min:2,
+        max:4
+      }
+    };
+
     this.element = document.createElement("div");
     this.element.classList.add("unit");
     this.element.addEventListener('click', this.clicked.bind(this));
