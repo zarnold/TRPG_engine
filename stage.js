@@ -89,7 +89,8 @@ export default class Stage {
         newSquare.addEventListener('click', function(event) {
           event.i = i;
           event.j = j;
-        });
+          event.square = this;
+        }.bind(newSquare));
         this.cells[i][j] = newSquare;
       }
       this.element.appendChild(newRow);
@@ -143,20 +144,28 @@ export default class Stage {
 
     if(event.type == 'click') {
 
+      console.log('------------------');
+      console.log(event.square);
       // A unit was clicked
       if(event.hasOwnProperty('src')) {
 
-        if(event.src == this.selected) {
+        if( typeof this.selected === 'undefined') {
+          console.log(" Newly selected unit");
+          this.selected = event.src;
+          this.somethingHappens('unitSelection');
+        } else if(event.src == this.selected) {
+          console.log("Unselection");
           this.selected = undefined;
           this.somethingHappens('unitUnselection');
         } else {
-          this.selected = event.src;
-          this.somethingHappens('unitSelection');
+          console.log(this.selected.name + " attacks " + event.src.name + " !");
+          this.somethingHappens('unitUnselection');
           //event.src.moveTo(event.src.moveTo(event.i+1, event.j));
         };
       }
 
-      console.log(event.target.classList);
+      // NOT GOOD
+      // a square was clicked without unit
       if(event.target.classList.contains("reachable"))
       {
           this.selected.moveTo(event.target.dataset.x, event.target.dataset.y)
