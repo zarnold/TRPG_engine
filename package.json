@@ -1,0 +1,24 @@
+{
+  "name": "trpg_engine",
+  "version": "1.0.0",
+  "description": "",
+  "main": "dev-server.js",
+  "dependencies": {
+    "nodemon": "^2.0.2"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "nodemon dev-server"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/zarnold/TRPG_engine.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/zarnold/TRPG_engine/issues"
+  },
+  "homepage": "https://github.com/zarnold/TRPG_engine#readme"
+}
